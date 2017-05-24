@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Topbar></Topbar>
+    <Loading :show="loading"></Loading>
     <main class="main">
       <router-view></router-view>
     </main>
@@ -10,12 +11,19 @@
 
 <script>
   import Topbar from '@/components/Topbar';
+  import Loading from '@/components/Loading';
   import Copyright from '@/components/Copyright';
 
   export default {
     name: 'app',
+    computed: {
+      loading() {
+        return this.$store.state.loading;
+      },
+    },
     components: {
       Topbar,
+      Loading,
       Copyright,
     },
   };
@@ -24,6 +32,7 @@
 <style lang="scss">
   .main {
     width: 1000px;
-    margin: 20px auto 50px auto;
+    padding: 0 16px;
+    margin: 80px auto 30px auto;
   }
 </style>

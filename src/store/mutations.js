@@ -1,6 +1,8 @@
 export default {
   SET_LIST: (state, data) => {
-    console.log(state, data);
-    state.list = [];
+    state.list = data;
+  },
+  SET_LOADING: (state, data) => {
+    state.loading = data;
   },
 };

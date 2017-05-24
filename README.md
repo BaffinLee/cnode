@@ -1,6 +1,6 @@
 # cnode
 
-An cnode.org client powered by vue
+An cnode.org client powered by vue.js
 
 ## Build Setup
 

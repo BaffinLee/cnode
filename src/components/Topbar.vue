@@ -1,10 +1,10 @@
 <template>
   <header class="header">
     <div class="inner">
-      <router-link to="/">
-        <img src="../static/images/logo.svg" alt="首页">
-      </router-link>
       <nav>
+        <router-link to="/">
+          <img :src="logo" alt="首页">
+        </router-link>
         <router-link to="/">全部</router-link>
         <router-link to="/good">精华</router-link>
         <router-link to="/share">分享</router-link>
@@ -16,7 +16,15 @@
 </template>
 
 <script>
+  import logo from '@/assets/img/logo.svg';
 
+  export default {
+    data() {
+      return {
+        logo,
+      };
+    },
+  };
 </script>
 
 <style lang="scss">
@@ -29,9 +37,10 @@
     line-height: 52px;
     min-width: 1032px;
     overflow: hidden;
-    background: #fff;
+    background-color: #fff;
     border-bottom: 1px solid rgba(30, 35, 42, 0.06);
     box-shadow: 0 1px 3px 0 rgba(0, 34, 77, 0.05);
+    z-index: 10;
 
     .inner {
       width: 1000px;
@@ -56,7 +65,6 @@
 
       nav {
         display: inline-block;
-        margin-left: 30px;
 
         a {
           margin-right: 20px;
