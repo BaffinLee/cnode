@@ -51,7 +51,7 @@
         color: #8590a6;
 
         &:hover,
-        &.router-link-active {
+        &.router-link-exact-active {
           color: #80bd01;
         }
 
@@ -67,7 +67,7 @@
         display: inline-block;
 
         a {
-          margin-right: 20px;
+          margin-right: 30px;
         }
       }
     }

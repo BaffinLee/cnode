@@ -16,7 +16,7 @@
   export default {
     data() {
       return {
-        last: 99,
+        last: 30,
         selected: this.now,
       };
     },
@@ -30,6 +30,7 @@
         let tmp = 0;
         const list = [];
 
+        // start
         if (this.selected > 3) {
           list.push({
             type: 'home',
@@ -47,6 +48,7 @@
           start = 1;
         }
 
+        // end
         if (start + 4 < this.last) {
           end = start + 4;
         } else {
@@ -54,6 +56,7 @@
           end = this.last;
         }
 
+        // nums
         tmp = start;
         while (tmp <= end) {
           list.push({
@@ -65,6 +68,7 @@
           tmp += 1;
         }
 
+        // end
         list.push({
           type: 'dot',
           name: '···',

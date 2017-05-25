@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Topbar></Topbar>
-    <Loading :show="loading"></Loading>
+    <Loading></Loading>
     <main class="main">
       <router-view></router-view>
     </main>
@@ -16,11 +16,6 @@
 
   export default {
     name: 'app',
-    computed: {
-      loading() {
-        return this.$store.state.loading;
-      },
-    },
     components: {
       Topbar,
       Loading,

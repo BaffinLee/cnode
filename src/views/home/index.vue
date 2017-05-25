@@ -15,7 +15,10 @@
           <img :src="item.author.avatar_url" alt="logo">
         </div>
         <div class="title">
-          <router-link :to="`/topic/${item.id}`">{{item.title}}</router-link>
+          <a
+            :href="`#/t/${item.id}`"
+            @click.prevent="gotoTopic(item)"
+          >{{item.title}}</a>
         </div>
         <div class="time">{{item.time}}</div>
         <div class="mark" v-if="item.top">
@@ -28,7 +31,10 @@
         </div>
       </li>
     </ul>
-    <Pagging :now="page.now"></Pagging>
+    <Pagging
+      :now="page.now"
+      @change="pageChange"
+    ></Pagging>
   </div>
 </template>
 
@@ -48,15 +54,18 @@
           now: 1,
           size: 20,
         },
+        tab: '',
       };
     },
     computed: {
-      tab() {
-        return this.$route.path.replace('/', '');
+      state() {
+        return this.$store.state.page;
       },
     },
     methods: {
       getList() {
+        this.$store.commit('SET_LOADING', true);
+
         fetch(utils.url({
           name: 'list',
           params: {
@@ -67,6 +76,8 @@
         })).then(res => (
           res.json()
         )).then((res) => {
+          this.$store.commit('SET_LOADING', false);
+
           if (!res.success) {
             console.error('list api error');
             this.list = [];
@@ -80,15 +91,54 @@
 
           this.list = res.data;
         }).catch((err) => {
+          this.$store.commit('SET_LOADING', false);
           console.error(err);
         });
       },
+      pageChange(page) {
+        this.page.now = page;
+        this.getList();
+      },
+      pathChange() {
+        this.tab = this.$route.path.replace('/', '');
+        this.getList();
+      },
+      gotoTopic(data) {
+        this.$store.commit('SET_TOPIC', JSON.parse(JSON.stringify(data)));
+        this.$router.push(`/t/${data.id}`);
+      },
+    },
+    beforeRouteLeave(to, from, next) {
+      // 存下列表数据
+      this.$store.commit('SET_PAGE', {
+        path: from.path,
+        data: {
+          list: JSON.parse(JSON.stringify(this.list)),
+          page: this.page.now,
+        },
+        scroll: [
+          document.body.scrollLeft || document.documentElement.scrollLeft,
+          document.body.scrollTop || document.documentElement.scrollTop,
+        ],
+      });
+      next();
     },
     created() {
-      this.getList();
+      // 从别处回来，从vuex里拿数据
+      if (this.state.path === this.$route.path) {
+        this.list = this.state.data.list;
+        this.page.now = this.state.data.page;
+        window.scroll(...this.state.scroll);
+      // 直接打开，请求接口
+      } else {
+        this.pathChange();
+      }
     },
     components: {
       Pagging,
+    },
+    watch: {
+      '$route.path': 'pathChange',
     },
   };
 </script>
@@ -109,6 +159,7 @@
       padding: 20px;
       line-height: 20px;
       border-bottom: 1px solid #eee;
+      transition: all 0.2s ease;
 
       &:last-child {
         border-bottom: 0;
@@ -117,6 +168,10 @@
       & > div {
         height: $size;
         line-height: $size;
+      }
+
+      &:hover {
+        background-color: #f5f5f5;
       }
 
       .num {
@@ -154,6 +209,10 @@
 
           &:hover {
             color: $green;
+          }
+
+          &:visited {
+            color: #b5b5b5;
           }
         }
       }

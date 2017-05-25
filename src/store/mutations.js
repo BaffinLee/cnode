@@ -1,8 +1,11 @@
 export default {
-  SET_LIST: (state, data) => {
-    state.list = data;
+  SET_PAGE: (state, data) => {
+    state.page = data;
   },
   SET_LOADING: (state, data) => {
     state.loading = data;
+  },
+  SET_TOPIC: (state, data) => {
+    state.topic = data;
   },
 };

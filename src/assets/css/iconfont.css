@@ -16,6 +16,6 @@
 }
 
 .icon-star:before { content: "\e694"; }
-
 .icon-fix:before { content: "\e600"; }
-
+.icon-collection:before { content: "\e6eb"; }
+.icon-collection-fill:before { content: "\e6ea"; }
