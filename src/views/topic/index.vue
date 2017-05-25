@@ -1,27 +1,37 @@
 <template>
-  <article class="topic">
-    <section class="title">
-      <h1>{{topic.title}}</h1>
-      <p>
-        <router-link :to="`/u/${topic.author_id}`">{{topic.author && topic.author.loginname}}</router-link>
-        <span>·</span>
-        <span>{{time}}</span>
-        <span>·</span>
-        <span>{{topic.visit_count}}</span>
-        <span>次点击·</span>
-      </p>
-      <div class="star">
-        <i class="iconfont icon-collection"></i>
-        <i class="iconfont icon-collection-fill"></i>
-      </div>
-    </section>
-    <section class="content" v-html="content"></section>
-  </article>
+  <div class="topic">
+    <article class="article">
+      <section class="title">
+        <h1>{{topic.title}}</h1>
+        <p>
+          <router-link
+            :to="`/u/${topic.authorName}`"
+          >{{topic.authorName}}</router-link>
+          <span>·</span>
+          <span>{{time}}</span>
+          <span>·</span>
+          <span>{{topic.visit_count}}</span>
+          <span>次点击·</span>
+        </p>
+        <div class="star">
+          <i class="iconfont icon-collection"></i>
+          <i class="iconfont icon-collection_fill"></i>
+        </div>
+      </section>
+      <section class="content" v-html="content"></section>
+    </article>
+    <replies
+      :topic="id"
+      :author="topic.authorName"
+      :replies="replies"
+    ></replies>
+  </div>
 </template>
 
 <script>
   import moment from 'moment';
   import utils from '@/assets/js/utils';
+  import replies from '@/views/topic/replies';
 
   moment.locale('zh-CN');
 
@@ -31,12 +41,17 @@
       return {
         id: this.$route.params.id,
         topic: this.$store.state.topic,
-        content: this.$store.state.topic.content,
       };
     },
     computed: {
       time() {
         return moment(this.topic.create_at).fromNow();
+      },
+      replies() {
+        return this.$store.state.replies;
+      },
+      content() {
+        return this.$store.state.topic.content;
       },
     },
     methods: {
@@ -45,9 +60,13 @@
         for (let i = 0; i < arr.length; i++) {
           arr[i].className += ' linenums';
         }
-        window.PR.prettyPrint();
+        if (window.PR) window.PR.prettyPrint();
       },
       getInfo() {
+        if (this.replies.id === this.id) {
+          return;
+        }
+
         if (!this.content) {
           this.$store.commit('SET_LOADING', true);
         }
@@ -67,13 +86,28 @@
             return;
           }
 
+          res.data.authorName = res.data.author.loginname;
+          res.data.authorLogo = res.data.author.avatar_url;
+
           this.topic = res.data;
 
+          res.data.replies.forEach((item) => {
+            item.time = moment(item.create_at).fromNow();
+            item.authorName = item.author.loginname;
+            item.authorLogo = item.author.avatar_url;
+          });
+
           if (!this.content) {
-            this.content = res.data.content;
+            this.$store.commit('SET_TOPIC', res.data);
           }
 
+          this.$store.commit('SET_REPLAIES', {
+            data: res.data.replies,
+            id: this.id,
+          });
+
           this.preetyCode();
+          this.changeUserUrl();
         }).catch((err) => {
           if (!this.content) {
             this.$store.commit('SET_LOADING', false);
@@ -81,10 +115,26 @@
           console.error(err);
         });
       },
+      changeUserUrl() {
+        setTimeout(() => {
+          const arr = document.querySelectorAll('#replies a');
+          let href = '';
+          for (let i = 0; i < arr.length; i++) {
+            href = arr[i].href;
+            if (href.match('/user/')) {
+              arr[i].href = href.replace('/user/', '#/u/');
+            }
+          }
+        }, 500);
+      },
     },
     mounted() {
       this.getInfo();
       this.preetyCode();
+      this.changeUserUrl();
+    },
+    components: {
+      replies,
     },
   };
 </script>
@@ -94,8 +144,11 @@
 
   .topic {
     line-height: 30px;
-    background-color: white;
-    border: 1px solid #eee;
+    
+    article {
+      background-color: white;
+      border: 1px solid #eee;
+    }
 
     section {
       padding: 20px;
@@ -138,7 +191,7 @@
         color: #d2cdcd;
       }
 
-      .icon-collection-fill {
+      .icon-collection_fill {
         color: transparent;
 
         &:hover {
@@ -210,6 +263,14 @@
 
     a, a:hover {
       color: $green;
+    }
+
+    .prettyprint {
+      overflow: auto;
+    }
+
+    .linenums {
+      color: #dedada;
     }
   }
 </style>

@@ -32,4 +32,8 @@ export default {
 
     return '';
   },
+  // copy object
+  copy(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  },
 };

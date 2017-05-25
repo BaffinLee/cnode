@@ -20,7 +20,7 @@
 
 <style lang="scss">
   footer {
-    width: 800px;
+    width: 1000px;
     margin: 20px auto;
     text-align: center;
 

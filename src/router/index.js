@@ -5,7 +5,7 @@ import topic from '@/views/topic';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -13,7 +13,7 @@ export default new Router({
       component: list,
     },
     {
-      path: '/t/:id',
+      path: '/t/:id/:reply?',
       name: 'topic',
       component: topic,
     },
@@ -24,3 +24,5 @@ export default new Router({
     },
   ],
 });
+
+export default router;

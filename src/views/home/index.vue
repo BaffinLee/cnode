@@ -12,7 +12,7 @@
           </div>
         </div>
         <div class="pic">
-          <img :src="item.author.avatar_url" alt="logo">
+          <img :src="item.authorLogo" alt="logo">
         </div>
         <div class="title">
           <a
@@ -84,9 +84,11 @@
             return;
           }
 
-          // 格式化最后回复时间
+          // 格式化数据
           res.data.forEach((item) => {
             item.time = moment(item.last_reply_at).fromNow();
+            item.authorName = item.author.loginname;
+            item.authorLogo = item.author.avatar_url;
           });
 
           this.list = res.data;
@@ -104,7 +106,7 @@
         this.getList();
       },
       gotoTopic(data) {
-        this.$store.commit('SET_TOPIC', JSON.parse(JSON.stringify(data)));
+        this.$store.commit('SET_TOPIC', data);
         this.$router.push(`/t/${data.id}`);
       },
     },
@@ -113,13 +115,9 @@
       this.$store.commit('SET_PAGE', {
         path: from.path,
         data: {
-          list: JSON.parse(JSON.stringify(this.list)),
+          list: this.list,
           page: this.page.now,
         },
-        scroll: [
-          document.body.scrollLeft || document.documentElement.scrollLeft,
-          document.body.scrollTop || document.documentElement.scrollTop,
-        ],
       });
       next();
     },
@@ -128,7 +126,6 @@
       if (this.state.path === this.$route.path) {
         this.list = this.state.data.list;
         this.page.now = this.state.data.page;
-        window.scroll(...this.state.scroll);
       // 直接打开，请求接口
       } else {
         this.pathChange();

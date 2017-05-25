@@ -28,6 +28,6 @@
   .main {
     width: 1000px;
     padding: 0 16px;
-    margin: 80px auto 30px auto;
+    margin: 30px auto 30px auto;
   }
 </style>

@@ -8,5 +8,6 @@ export default {
     },
   },
   topic: {},
+  replies: {},
   loading: false,
 };

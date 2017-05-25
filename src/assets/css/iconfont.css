@@ -17,5 +17,8 @@
 
 .icon-star:before { content: "\e694"; }
 .icon-fix:before { content: "\e600"; }
+.icon-collection_fill:before { content: "\e6ea"; }
 .icon-collection:before { content: "\e6eb"; }
-.icon-collection-fill:before { content: "\e6ea"; }
+.icon-people_fill:before { content: "\e715"; }
+.icon-reply:before { content: "\e86f"; }
+.icon-like:before { content: "\e870"; }
