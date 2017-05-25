@@ -3,7 +3,7 @@
     <section class="title">
       <h1>{{topic.title}}</h1>
       <p>
-        <router-link :to="`/u/${topic.author_id}`">{{topic.author.loginname}}</router-link>
+        <router-link :to="`/u/${topic.author_id}`">{{topic.author && topic.author.loginname}}</router-link>
         <span>·</span>
         <span>{{time}}</span>
         <span>·</span>
@@ -15,13 +15,13 @@
         <i class="iconfont icon-collection-fill"></i>
       </div>
     </section>
-    <section class="content" v-html="topic.content"></section>
+    <section class="content" v-html="content"></section>
   </article>
 </template>
 
 <script>
   import moment from 'moment';
-  // import utils from '@/assets/js/utils';
+  import utils from '@/assets/js/utils';
 
   moment.locale('zh-CN');
 
@@ -30,15 +30,61 @@
     data() {
       return {
         id: this.$route.params.id,
+        topic: this.$store.state.topic,
+        content: this.$store.state.topic.content,
       };
     },
     computed: {
-      topic() {
-        return this.$store.state.topic;
-      },
       time() {
         return moment(this.topic.create_at).fromNow();
       },
+    },
+    methods: {
+      preetyCode() {
+        const arr = document.getElementsByClassName('prettyprint');
+        for (let i = 0; i < arr.length; i++) {
+          arr[i].className += ' linenums';
+        }
+        window.PR.prettyPrint();
+      },
+      getInfo() {
+        if (!this.content) {
+          this.$store.commit('SET_LOADING', true);
+        }
+
+        fetch(utils.url({
+          name: 'info',
+          end: this.id,
+        })).then(res => (
+          res.json()
+        )).then((res) => {
+          if (!this.content) {
+            this.$store.commit('SET_LOADING', false);
+          }
+
+          if (!res.success) {
+            console.error('info api error');
+            return;
+          }
+
+          this.topic = res.data;
+
+          if (!this.content) {
+            this.content = res.data.content;
+          }
+
+          this.preetyCode();
+        }).catch((err) => {
+          if (!this.content) {
+            this.$store.commit('SET_LOADING', false);
+          }
+          console.error(err);
+        });
+      },
+    },
+    mounted() {
+      this.getInfo();
+      this.preetyCode();
     },
   };
 </script>

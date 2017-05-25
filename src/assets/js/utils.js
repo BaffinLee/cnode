@@ -7,6 +7,10 @@ export default {
     let url = config.url || API.get(config.name) || '';
     let query = '';
 
+    if (config.end) {
+      url += config.end;
+    }
+
     // handle query
     if (url) {
       url.replace(/&$/, '');
@@ -17,7 +21,7 @@ export default {
         });
       }
 
-      if (!url.match(/\?/)) {
+      if (!url.match(/\?/) && query) {
         query = query.replace(/^&?/, '?');
       }
 
