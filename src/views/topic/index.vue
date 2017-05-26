@@ -58,7 +58,7 @@
       preetyCode() {
         const arr = document.getElementsByClassName('prettyprint');
         for (let i = 0; i < arr.length; i++) {
-          arr[i].className += ' linenums';
+          if (!arr[i].className.match('linenums')) arr[i].className += ' linenums';
         }
         if (window.PR) window.PR.prettyPrint();
       },
@@ -105,9 +105,6 @@
             data: res.data.replies,
             id: this.id,
           });
-
-          this.preetyCode();
-          this.changeUserUrl();
         }).catch((err) => {
           if (!this.content) {
             this.$store.commit('SET_LOADING', false);
@@ -116,20 +113,22 @@
         });
       },
       changeUserUrl() {
-        setTimeout(() => {
-          const arr = document.querySelectorAll('#replies a');
-          let href = '';
-          for (let i = 0; i < arr.length; i++) {
-            href = arr[i].href;
-            if (href.match('/user/')) {
-              arr[i].href = href.replace('/user/', '#/u/');
-            }
+        const arr = document.querySelectorAll('#replies a');
+        let href = '';
+        for (let i = 0; i < arr.length; i++) {
+          href = arr[i].href;
+          if (href.match('/user/')) {
+            arr[i].href = href.replace('/user/', '#/u/');
           }
-        }, 500);
+        }
       },
     },
     mounted() {
       this.getInfo();
+      this.preetyCode();
+      this.changeUserUrl();
+    },
+    updated() {
       this.preetyCode();
       this.changeUserUrl();
     },
@@ -144,7 +143,7 @@
 
   .topic {
     line-height: 30px;
-    
+
     article {
       background-color: white;
       border: 1px solid #eee;

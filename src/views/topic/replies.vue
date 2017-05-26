@@ -84,7 +84,7 @@
         }
 
         a {
-          color: #333;
+          color: #868282;
 
           &:hover {
             color: #80bd01;

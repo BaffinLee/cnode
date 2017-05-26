@@ -25,4 +25,8 @@ const router = new Router({
   ],
 });
 
+router.afterEach(() => {
+  window.scroll(0, 0);
+});
+
 export default router;
