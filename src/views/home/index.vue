@@ -21,11 +21,11 @@
           >{{item.title}}</a>
         </div>
         <div class="time">{{item.time}}</div>
-        <div class="mark" v-if="item.top">
+        <div class="mark" v-if="item.top" title="置顶">
           <i class="block"></i>
           <i class="iconfont icon-fix"></i>
         </div>
-        <div class="mark" v-if="item.good">
+        <div class="mark" v-if="item.good" title="精华">
           <i class="block"></i>
           <i class="iconfont icon-star"></i>
         </div>

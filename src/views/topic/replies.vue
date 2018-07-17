@@ -31,7 +31,7 @@
             <span class="reply-num">{{item.ups.length}}</span>
           </p>
         </div>
-        <p class="text" v-html="item.content"></p>
+        <div class="text" v-html="item.content"></div>
       </div>
     </li>
   </ul>
@@ -53,7 +53,7 @@
     margin-left: 0!important;
     list-style: none;
 
-    li {
+    & > li {
       display: flex;
       margin-bottom: 20px;
 
@@ -73,6 +73,7 @@
 
       .content {
         flex: 1 1 0;
+        width: 930px;
       }
 
       .author {
@@ -106,6 +107,7 @@
           visibility: hidden;
           margin-right: 10px;
           font-size: 20px;
+          transition: all 0.1s ease;
           cursor: pointer;
         }
 

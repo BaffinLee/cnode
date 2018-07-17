@@ -13,7 +13,7 @@
           <span>{{topic.visit_count}}</span>
           <span>次点击·</span>
         </p>
-        <div class="star">
+        <div class="star" title="收藏">
           <i class="iconfont icon-collection"></i>
           <i class="iconfont icon-collection_fill"></i>
         </div>
@@ -224,6 +224,9 @@
 
     p {
       margin-top: 10px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      word-break: break-word;
     }
 
     & > p:first-child {
@@ -231,7 +234,7 @@
     }
 
     img {
-      width: 100%;
+      max-width: 100%;
     }
 
     ul {
